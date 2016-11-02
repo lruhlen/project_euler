@@ -17,46 +17,50 @@ def get_next_prime():
     while True:
         current_max_prime = max(list_of_primes)
         yield current_max_prime
-        
+
         candidate = current_max_prime + 1
         while 0 in [candidate%n for n in list_of_primes]:
             candidate +=1
         list_of_primes.append(candidate)
-        
+
 
 def get_prime_factor_ceiling(n):
     return int(np.sqrt(n))
-    
-    
-def factor(n):
-    print "Factoring: ", n
+
+
+def factor_once(n):
     ceiling = get_prime_factor_ceiling(n)
-    print "factor ceiling =", ceiling
     prime_faucet = get_next_prime()
     this_factor = next(prime_faucet)
-    max_factor = this_factor
-    
-    while this_factor <= ceiling:
+
+    loop_counter = 0
+
+    while (this_factor <= ceiling):
+        loop_counter += 1
         if n % this_factor == 0:
-            print "current max_factor =", this_factor
-            max_factor = factor(n/this_factor)
+            return this_factor
         else:
             this_factor = next(prime_faucet)
-            
-    return max_factor
-    
+
+    return n
+
+
+def factor_full(n):
+    denom = factor_once(n)
+    if denom > 1:
+        return max(denom, factor_full(n/denom))
+    else:
+        return max(denom, n/denom)
+
 
 
 # Tests
-#prime_faucet = get_next_prime()
-#for x in xrange(10):
-#    print next(prime_faucet)
-
 
 assert get_prime_factor_ceiling(26) == 5, "get_prime_factor_ceiling \
 returned incorrect answer"
 
-print factor(13195)
-assert factor(13195)== 29, "factor(13195) failed to return 29"
+assert factor_full(2) == 2, "factor_full(2) returned incorrect answer"
+assert factor_full(4) == 2, "factor_full(4) returned incorrect answer"
+assert factor_full(13195)== 29, "factor(13195) failed to return 29"
 
-#print factor(600851475143)
+print factor_full(600851475143)
