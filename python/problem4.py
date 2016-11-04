@@ -17,67 +17,23 @@ DEFAULT_UPPER_VAL = 999
 
 def is_number_palindrome(x):
     if str(abs(x)) == str(abs(x))[::-1]:
+        print "FOUND A PALINDROME!"
         print x
         return True
     else:
         return False
 
 
-def diag_vals(lower_val=DEFAULT_LOWER_VAL,
-              upper_val=DEFAULT_UPPER_VAL,
-              row_shift=0,
-              col_shift=0):
-    x = upper_val - col_shift
-    y = upper_val - row_shift
-    while (x >= lower_val) and (x >= lower_val):
-        yield x, y, x*y
-        x -= 1
-        y -= 1
-
-def find_largest_diag_palindrome(lower_val=DEFAULT_LOWER_VAL,
-                                 upper_val=DEFAULT_UPPER_VAL,
-                                 row_shift=0,
-                                 col_shift=0):
-    diag_val_gen = diag_vals(lower_val=lower_val,
-                             upper_val=upper_val,
-                             row_shift=row_shift,
-                             col_shift=col_shift)
-    x = next(diag_val_gen)
-
-    while (not(is_number_palindrome(x[-1]))
-        and x[1] <= upper_val
-        and x[0] >= lower_val):
-        x = next(diag_val_gen)
-
-    print "FOUND A PALINDROME! ", x
-    return x
-
-
-def search_for_palindromes(lower_val=DEFAULT_LOWER_VAL,
-                           upper_val=DEFAULT_UPPER_VAL):
-    row_shift = 0
-    col_shift = 0
-
-
-    while lower_val < upper_val:
-        try:
-            N = find_largest_diag_palindrome(lower_val=lower_val,
-                                             upper_val=upper_val,
-                                             row_shift=row_shift,
-                                             col_shift=col_shift)
-            lower_val += 1
-        except StopIteration:
-            print "Nothing on this diagonal..."
-
-        row_shift -= 1
-        lower_val = N[1]
-        print N
-
-    return N
+def make_diag_elements(row_vals, col_vals):
+    return "placeholder for now"
 
 
 ## Tests
-print search_for_palindromes(lower_val=14, upper_val=24)
+def make_printable_matrix(min_val=0, max_val=0):
+    vec = np.arange(min_val, max_val)
+    matr = np.triu(np.outer(vec, vec.T))
+    return matr
 
-print search_for_palindromes(lower_val=10, upper_val=99)
-
+min_val = 8
+max_val = 20
+print make_printable_matrix(min_val=min_val, max_val=max_val)
