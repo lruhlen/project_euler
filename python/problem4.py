@@ -31,8 +31,11 @@ def get_diag_elements(mat, k=0):
 
 
 def get_palindrome_indices(vec):
-     tmp = np.where(map(is_number_palindrome, vec))
-     return np.max(tmp)
+    tmp= map(is_number_palindrome, vec)
+    if any(tmp):
+        return np.max(np.where(map(is_number_palindrome, vec)))
+    return np.array([])
+
 
 
 def truncate_matrix(vec, mat, new_min_val=0):
@@ -45,28 +48,37 @@ def truncate_matrix(vec, mat, new_min_val=0):
 def main(min_val=DEFAULT_LOWER_VAL, max_val=DEFAULT_UPPER_VAL):
     largest_palin = 0
     k = 0
-    max_k = max_val - min_val
     vec, mat = make_initial_matrix(min_val=min_val, max_val=max_val)
+    max_k = len(vec)
     print mat
-    while k <= max_k:
-        print vec
+    counter = 0
+
+    while k <= max_k and counter < 10:
+#        print "\n\n LOOP NUMBER ", counter
+        counter += 1
+#        print "vec length = ", len(vec)
         x = get_diag_elements(mat, k)
+#        print "diagonal elements = ", x
         if not x.size:
             break
 
         new_min = get_palindrome_indices(x)
-        print "new_min = ", new_min
+
+#       print "new_min = ", new_min, new_min.size
+#        print "max_k = ", max_k
 
         if (new_min.size > 0) and new_min < max_k:
             largest_palin = x[new_min]
             vec, mat = truncate_matrix(vec, mat, new_min)
-
-        k += 1
+            max_k = len(vec)
+            k += 1
+        else:
+            break
 
     if largest_palin == 0:
         return "No palindromes found"
     else:
-        return largest_palin
+        return vec[0], largest_palin/vec[0], largest_palin
 
 
 
@@ -74,7 +86,7 @@ def main(min_val=DEFAULT_LOWER_VAL, max_val=DEFAULT_UPPER_VAL):
 
 
 ## Tests
-print main(min_val=9, max_val=22)
+print main(min_val=9, max_val=20)
 #def make_printable_matrix(min_val=0, max_val=0):
 #    vec = np.arange(min_val, max_val)
 #    matr = np.triu(np.outer(vec, vec.T))
